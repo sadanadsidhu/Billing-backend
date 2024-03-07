@@ -6,11 +6,11 @@ const accountSchema = new Schema({
         type: Number,
         required: false,
     },
-    accountType: {
-        type: String,
-        default: ['saving', 'current'],
-        required: false,
-    },
+    // accountType: {
+    //     type: String,
+    //     default: ['saving', 'current'],
+    //     required: false,
+    // },
     Name:{
         type: String,
         required: false,

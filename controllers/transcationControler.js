@@ -34,7 +34,7 @@ const createTransaction = asyncHandler(async (req, res) => {
             remark,
             transactionNo
         })
-        account.ClosingBalance = account.ClosingBalance + amount
+        account.closingBalance = account.closingBalance + amount
         await account.save()
 
         return res.status(201).json(new ApiResponse(200, {
@@ -45,7 +45,7 @@ const createTransaction = asyncHandler(async (req, res) => {
 
     } else if (transactionType === "payment") {
 
-        if (account.ClosingBalance >= amount) {
+        if (account.closingBalance >= amount) {
             const withDrawTansactions = await Transaction.create({
                 accountHolderId,
                 accountNumber: account.accountNumber,
@@ -56,7 +56,7 @@ const createTransaction = asyncHandler(async (req, res) => {
                 transactionNo
 
             })
-            account.ClosingBalance = account.ClosingBalance - amount
+            account.closingBalance = account.closingBalance - amount
             await account.save()
 
             return res.status(201).json(new ApiResponse(200, {
@@ -94,7 +94,7 @@ const deleteTransaction = asyncHandler(async (req, res) => {
 
     if (deleteTransaction) {
 
-        const { ClosingBalance } = await AccountCreate.findOne({ accountNumber: transaction.accountNumber })
+        const { closingBalance } = await AccountCreate.findOne({ accountNumber: transaction.accountNumber })
 
         if (transaction.transactionType === "payment") {
 
@@ -102,7 +102,7 @@ const deleteTransaction = asyncHandler(async (req, res) => {
                 { accountNumber: transaction.accountNumber },
                 {
                     $set: {
-                        ClosingBalance: ClosingBalance + transaction.amount
+                        closingBalance: closingBalance + transaction.amount
                     }
                 },
                 { new: true }
@@ -113,7 +113,7 @@ const deleteTransaction = asyncHandler(async (req, res) => {
                 { accountNumber: transaction.accountNumber },
                 {
                     $set: {
-                        ClosingBalance: ClosingBalance - transaction.amount
+                        closingBalance: closingBalance - transaction.amount
                     }
                 },
                 { new: true }
